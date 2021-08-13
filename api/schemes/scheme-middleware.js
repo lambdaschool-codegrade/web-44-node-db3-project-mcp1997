@@ -9,10 +9,12 @@ const db = require('../../data/db-config')
   }
 */
 const checkSchemeId = async (req, res, next) => {
-  const existingID = await db('schemes').where('scheme_id', req.params.id).first()
+  const { scheme_id } = req.params
+
+  const existingID = await db('schemes').where('scheme_id', scheme_id).first()
   if (!existingID) {
     res.status(404).json({
-      message: `scheme with scheme_id ${req.params.id} not found`
+      message: `scheme with scheme_id ${scheme_id} not found`
     })
   } else {
     next()
@@ -55,7 +57,7 @@ const validateStep = (req, res, next) => {
     !instructions 
     || instructions === '' 
     || typeof instructions !== 'string'
-    || step_number !== 'number'
+    || typeof step_number !== 'number'
     || step_number < 1
   ) {
     res.status(400).json({
